@@ -182,7 +182,7 @@
     <source src="assets/music.mp3" type="audio/mpeg" />
   </audio>
 
-  <button id="start-button">Comenzar experiencia</button>
+  <button id="start-button">Toca para comenzar la experiencia</button>
   <button class="continue-button" id="continue1">Continuar</button>
   <button class="continue-button" id="continue2">Continuar</button>
   <button class="continue-button" id="continue3">Continuar</button>
@@ -230,7 +230,12 @@
       window.addEventListener("load", () => {
         videos[0].load();
         videos[2].load();
-        videos[0].play().catch(() => {
+        videos[0].play().then(() => {
+          // Autoplay OK
+        }).catch(() => {
+          // Autoplay bloqueado: mostrar botón
+          videos[0].pause();
+          startButton.textContent = "Toca para comenzar la experiencia";
           startButton.style.display = "block";
         });
       });
@@ -278,9 +283,14 @@
 
     startButton.addEventListener("click", () => {
       startButton.style.display = "none";
-      videos[1].currentTime = 0;
-      videos[1].load();
-      videos[1].play();
+
+      if (videos[0].style.display !== "none") {
+        videos[0].play();
+      } else {
+        videos[1].currentTime = 0;
+        videos[1].load();
+        videos[1].play();
+      }
 
       if (!audioStarted) {
         audio.currentTime = 0;
