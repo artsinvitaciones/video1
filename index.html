@@ -230,9 +230,17 @@
       window.addEventListener("load", () => {
         videos[0].load();
         videos[2].load();
-        videos[0].play().catch(() => {
-          startButton.style.display = "block";
-        });
+
+        const tryPlay = () => {
+          videos[0].play().then(() => {
+            // autoplay funcionando
+          }).catch(() => {
+            startButton.style.display = "block";
+          });
+        };
+
+        tryPlay();
+        document.body.addEventListener("touchstart", tryPlay, { once: true });
       });
     }
 
