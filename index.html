@@ -17,8 +17,8 @@
     .video-wrapper {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,15 +27,10 @@
 
     video {
       aspect-ratio: 9 / 16;
-      max-height: 100%;
-      width: auto;
+      height: 100%;
       object-fit: cover;
       position: absolute;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
-      margin: auto;
       z-index: 1;
-      opacity: 1;
     }
 
     #video0 { z-index: 6; }
@@ -60,6 +55,12 @@
       font-size: 12px;
       display: none;
       border-radius: 12px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .buttons-container {
@@ -139,9 +140,7 @@
         font-size: 10px;
         padding: 8px 16px;
       }
-      .button-img {
-        width: 50px;
-      }
+      .button-img { width: 50px; }
       #start-button {
         font-size: 14px;
         padding: 8px 20px;
@@ -153,15 +152,12 @@
         font-size: 14px;
         padding: 12px 24px;
       }
-      .button-img {
-        width: 70px;
-      }
+      .button-img { width: 70px; }
     }
   </style>
 </head>
 <body oncontextmenu="return false">
 
-  <!-- Bloqueo para navegadores no compatibles -->
   <div id="unsupported-browser">
     <div>
       <p>⚠️ Lo sentimos 😢</p>
@@ -233,7 +229,7 @@
     } else {
       window.addEventListener("load", () => {
         videos[0].load();
-        videos[2].load(); // Para suavidad
+        videos[2].load();
         videos[0].play().catch(() => {
           startButton.style.display = "block";
         });
