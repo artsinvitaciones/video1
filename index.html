@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Experiencia Interactiva</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: sans-serif;
+    }
+
+    .video-wrapper {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+    }
+
+    video {
+      aspect-ratio: 9 / 16;
+      max-height: 100%;
+      width: auto;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      margin: auto;
+      z-index: 1;
+      opacity: 1;
+    }
+
+    #video0 { z-index: 6; }
+    #video1 { z-index: 5; display: none; }
+    #video2 {
+      z-index: 4;
+      display: block;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .continue-button {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      z-index: 11;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid white;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      display: none;
+      border-radius: 12px;
+    }
+
+    .buttons-container {
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 11;
+      padding: 0 20px;
+      overflow-x: auto;
+    }
+
+    .buttons-container.enabled {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .button-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .button-img {
+      width: 60px;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+
+    .button-img:hover { opacity: 0.8; }
+    .inactive-link { pointer-events: none; }
+
+    #start-button {
+      position: absolute;
+      z-index: 10;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid white;
+      color: white;
+      font-size: 16px;
+      padding: 10px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+
+    #unsupported-browser {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      z-index: 9999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .continue-button {
+        font-size: 10px;
+        padding: 8px 16px;
+      }
+      .button-img {
+        width: 50px;
+      }
+      #start-button {
+        font-size: 14px;
+        padding: 8px 20px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .continue-button {
+        font-size: 14px;
+        padding: 12px 24px;
+      }
+      .button-img {
+        width: 70px;
+      }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false">
+
+  <!-- Bloqueo para navegadores no compatibles -->
+  <div id="unsupported-browser">
+    <div>
+      <p>⚠️ Lo sentimos 😢</p>
+      <p>Tu navegador no es compatible con esta experiencia interactiva.</p>
+      <p>Por favor, utiliza Google Chrome o Firefox para continuar.</p>
+    </div>
+  </div>
+
+  <div class="video-wrapper">
+    <video id="video0" autoplay playsinline muted preload="auto" controlsList="nodownload">
+      <source src="assets/video0.mp4" type="video/mp4" />
+    </video>
+    <video id="video1" playsinline muted preload="auto" controlsList="nodownload">
+      <source src="assets/video1.mp4" type="video/mp4" />
+    </video>
+    <video id="video2" playsinline muted loop preload="auto" controlsList="nodownload">
+      <source src="assets/video2.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <audio id="audio" loop preload="auto">
+    <source src="assets/music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="start-button">Comenzar experiencia</button>
+  <button class="continue-button" id="continue1">Continuar</button>
+  <button class="continue-button" id="continue2">Continuar</button>
+  <button class="continue-button" id="continue3">Continuar</button>
+
+  <div class="buttons-container" id="buttons-container">
+    <div class="button-wrapper">
+      <a href="https://maps.app.goo.gl/iLidSW6oDsJFU3Z18" target="_blank" class="inactive-link" tabindex="-1">
+        <img src="assets/salon.png" alt="Salón" class="button-img" />
+      </a>
+    </div>
+    <div class="button-wrapper">
+      <a href="https://api.whatsapp.com/send?phone=+59175200294&text=Hola%20quiero%20confirmar%20mi%20asistencia" target="_blank" class="inactive-link" tabindex="-1">
+        <img src="assets/botonasistencia.png" alt="Asistencia" class="button-img" />
+      </a>
+    </div>
+    <div class="button-wrapper">
+      <img src="assets/repetir.png" alt="Repetir" class="button-img" id="repeat-button" />
+    </div>
+  </div>
+
+  <script>
+    const videos = [...Array(3)].map((_, i) => document.getElementById(`video${i}`));
+    const audio = document.getElementById("audio");
+    const continueButtons = [
+      document.getElementById("continue1"),
+      document.getElementById("continue2"),
+      document.getElementById("continue3")
+    ];
+    const buttonsContainer = document.getElementById("buttons-container");
+    const allLinks = document.querySelectorAll(".buttons-container a");
+    const repeatButton = document.getElementById("repeat-button");
+    const startButton = document.getElementById("start-button");
+    const unsupported = document.getElementById("unsupported-browser");
+
+    let audioStarted = false;
+    let readyForFinal = false;
+    let pausePoints = [6, 14, 23];
+    let shownButtons = [false, false, false];
+
+    const isUnsupportedBrowser = /miui|miuibrowser|miwebview/.test(navigator.userAgent.toLowerCase());
+    if (isUnsupportedBrowser) {
+      unsupported.style.display = "flex";
+      document.querySelector(".video-wrapper").style.display = "none";
+    } else {
+      window.addEventListener("load", () => {
+        videos[0].load();
+        videos[2].load(); // Para suavidad
+        videos[0].play().catch(() => {
+          startButton.style.display = "block";
+        });
+      });
+    }
+
+    videos[1].addEventListener("timeupdate", () => {
+      pausePoints.forEach((point, index) => {
+        if (!shownButtons[index] && videos[1].currentTime >= point) {
+          videos[1].pause();
+          continueButtons[index].style.display = "block";
+          shownButtons[index] = true;
+        }
+      });
+    });
+
+    continueButtons.forEach((btn, index) => {
+      btn.addEventListener("click", () => {
+        btn.style.display = "none";
+        videos[1].play();
+        if (index === 2) readyForFinal = true;
+      });
+    });
+
+    videos[0].addEventListener("ended", () => {
+      videos[0].style.display = "none";
+      videos[1].style.display = "block";
+      startButton.style.display = "block";
+    });
+
+    videos[1].addEventListener("ended", () => {
+      if (readyForFinal) {
+        videos[2].style.display = "block";
+        videos[2].style.opacity = 1;
+        videos[2].play();
+        videos[1].style.display = "none";
+
+        buttonsContainer.classList.add("enabled");
+        allLinks.forEach(link => {
+          link.classList.remove("inactive-link");
+          link.removeAttribute("tabindex");
+          link.style.pointerEvents = "auto";
+        });
+      }
+    });
+
+    startButton.addEventListener("click", () => {
+      startButton.style.display = "none";
+      videos[1].currentTime = 0;
+      videos[1].load();
+      videos[1].play();
+
+      if (!audioStarted) {
+        audio.currentTime = 0;
+        audio.play();
+        audioStarted = true;
+      }
+    });
+
+    repeatButton.addEventListener("click", () => {
+      videos[1].pause();
+      videos[1].currentTime = 0;
+      videos[1].load();
+
+      videos[0].currentTime = 0;
+      videos[0].load();
+      videos[0].style.display = "block";
+      videos[1].style.display = "none";
+
+      videos[2].pause();
+      videos[2].style.opacity = 0;
+
+      videos[0].play();
+
+      audio.pause();
+      audio.currentTime = 0;
+      audioStarted = false;
+      readyForFinal = false;
+
+      startButton.style.display = "none";
+      buttonsContainer.classList.remove("enabled");
+      allLinks.forEach(link => {
+        link.classList.add("inactive-link");
+        link.setAttribute("tabindex", "-1");
+        link.style.pointerEvents = "none";
+      });
+
+      pausePoints = [6, 14, 23];
+      shownButtons = [false, false, false];
+      continueButtons.forEach(btn => btn.style.display = "none");
+    });
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+</body>
+</html>
